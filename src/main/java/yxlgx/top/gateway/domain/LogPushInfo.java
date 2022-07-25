@@ -20,14 +20,6 @@ public class LogPushInfo {
      */
     private String userId;
     /**
-     * 服务方
-     */
-    private String serviceId;
-    /**
-     * 负载编号
-     */
-    private String loadNum;
-    /**
      * 请求方法
      */
     private String method;
@@ -43,10 +35,6 @@ public class LogPushInfo {
      * 响应体大小
      */
     private long responseLength= 0L;
-    /**
-     * 服务地址
-     */
-    private String serviceAddress;
     /**
      * 请求参数
      */
