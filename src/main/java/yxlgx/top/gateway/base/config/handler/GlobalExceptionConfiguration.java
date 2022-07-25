@@ -1,4 +1,4 @@
-package yxlgx.top.gateway.base.handler;
+package yxlgx.top.gateway.base.config.handler;
 
 import yxlgx.top.gateway.base.constants.Constants;
 import yxlgx.top.gateway.base.exception.BaseException;

@@ -1,4 +1,4 @@
-package yxlgx.top.gateway.filter.circuit;
+package yxlgx.top.gateway.limit.sentinel;
 
 import com.alibaba.csp.sentinel.adapter.gateway.sc.callback.GatewayCallbackManager;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
@@ -15,9 +15,8 @@ import reactor.core.publisher.Mono;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @Author yanxin.
- * @Date 2022/7/20 16:06.
- * Created by IntelliJ IDEA
+ * @author yx
+ * @date 2022/7/20 16:06
  * File Description:
  */
 public class SentinelFallbackHandler implements WebExceptionHandler {

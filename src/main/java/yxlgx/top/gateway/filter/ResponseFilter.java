@@ -16,18 +16,20 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
- * 处理请求响应，可以修改响应信息
+ * 响应处理
  *
- * @Author: yx
- * @Date: 2021/10/13
+ * @author yx
+ * @date 2022/01/26
+ * @description
  **/
 @Component
 @Slf4j
 public class ResponseFilter implements GlobalFilter, Ordered {
 
-    private GatewayFilter delegate;
+    private final GatewayFilter delegate;
 
     public ResponseFilter(ModifyResponseBodyGatewayFilterFactory modifyResponseBodyGatewayFilterFactory,
                           ResponseBodyRewriteFunction rewriteFunction) {

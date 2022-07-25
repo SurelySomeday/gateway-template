@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.acrabsoft</groupId>
-    <artifactId>net-exchange-fwzx</artifactId>
+    <artifactId>gateway-template</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>net-exchange-fwzx</name>
-    <description>网络交换-服务总线</description>
+    <name>gateway-template</name>
+    <description>springCloudGateway模板</description>
     <properties>
         <java.version>1.8</java.version>
         <commons.lang.version>3.11</commons.lang.version>

@@ -5,6 +5,7 @@ import io.micrometer.core.instrument.Tags;
 import io.micrometer.core.instrument.Timer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.support.tagsprovider.GatewayTagsProvider;
@@ -81,7 +82,6 @@ public class LogFilter implements GlobalFilter, Ordered {
 
         long nanoSeconds = sample.stop(meterRegistry.timer( "requests", tags));
         Duration duration = Duration.ofNanos(nanoSeconds);
-        //log.info("cos:"+duration.toMillis()+" requests tags: " + tags);
         try {
             //日志对象
             LogPushInfo logPushInfo = FilterUtil.generateLog(exchange);
@@ -105,7 +105,7 @@ public class LogFilter implements GlobalFilter, Ordered {
             }
             log.info(logPushInfo.toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(ExceptionUtils.getStackTrace(e));
         }
     }
 

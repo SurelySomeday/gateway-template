@@ -1,7 +1,6 @@
-package yxlgx.top.gateway.filter.limit.sentinel;
+package yxlgx.top.gateway.limit.sentinel;
 
 import com.alibaba.cloud.sentinel.SentinelProperties;
-import com.alibaba.cloud.sentinel.custom.SentinelDataSourceHandler;
 import com.alibaba.cloud.sentinel.datasource.config.DataSourcePropertiesConfiguration;
 import com.alibaba.cloud.sentinel.datasource.config.NacosDataSourceProperties;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule;
@@ -13,18 +12,10 @@ import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.nacos.api.PropertyKeyConst;
-import com.alibaba.nacos.client.config.impl.CacheData;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.context.scope.refresh.RefreshScopeRefreshedEvent;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -41,21 +32,27 @@ import java.util.concurrent.ConcurrentHashMap;
  **/
 @RefreshScope
 @Configuration
-public class DataSourceInitFunc {
+public class SentinelDataSourceConfig {
 
 
     @Resource
     SentinelProperties sentinelProperties;
 
+    /**
+     * 临时存放数据源，下次更新时停止上一次的监听
+     */
     static Map<String, ReadableDataSource<?, ?>> dataSourceMap = new ConcurrentHashMap<>();
 
     @PostConstruct
-    public void after() throws Exception {
+    public void after() {
         init();
     }
 
 
-    public void init() throws Exception {
+    /**
+     * 动态加载sentinel数据源
+     */
+    public void init() {
         Properties flowProperties=new Properties();
         Properties degradeProperties=new Properties();
         //注册GatewayFlowRule 读数据源

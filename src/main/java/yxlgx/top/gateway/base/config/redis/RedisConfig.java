@@ -1,4 +1,4 @@
-package yxlgx.top.gateway.base.redis;
+package yxlgx.top.gateway.base.config.redis;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
