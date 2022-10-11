@@ -1,22 +1,20 @@
 package yxlgx.top.gateway.base.util;
 
-import cn.hutool.json.JSONUtil;
-import com.alibaba.nacos.api.naming.pojo.ServiceInfo;
-import yxlgx.top.gateway.base.constants.Constants;
-import yxlgx.top.gateway.domain.LogPushInfo;
-import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang3.ObjectUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Date;
+
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.io.buffer.NettyDataBuffer;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
 
-import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.URI_TEMPLATE_VARIABLES_ATTRIBUTE;
+import cn.hutool.json.JSONUtil;
+import yxlgx.top.gateway.base.constants.Constants;
+import yxlgx.top.gateway.domain.LogPushInfo;
 
 /**
  * @author yx
@@ -25,20 +23,19 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.U
 public class FilterUtil {
     public static boolean isTargetLogMediaType(ServerHttpResponse serverHttpResponse) {
         MediaType contentType = serverHttpResponse.getHeaders().getContentType();
-        if (MediaType.APPLICATION_JSON.isCompatibleWith(contentType)) {
-            return true;
-        } else if (MediaType.APPLICATION_XHTML_XML.isCompatibleWith(contentType)) {
-            return true;
-        } else if (MediaType.MULTIPART_FORM_DATA.isCompatibleWith(contentType)) {
-            return true;
-        } else if (MediaType.TEXT_HTML.isCompatibleWith(contentType)) {
-            return true;
-        } else if (MediaType.TEXT_PLAIN.isCompatibleWith(contentType)) {
-            return true;
-        } else if (MediaType.TEXT_XML.isCompatibleWith(contentType)) {
-            return true;
-        } else if (MediaType.TEXT_MARKDOWN.isCompatibleWith(contentType)) {
-            return true;
+        if(contentType==null) return false;
+        List<MediaType> mediaTypes=new ArrayList<>();
+        mediaTypes.add(MediaType.APPLICATION_JSON);
+        mediaTypes.add(MediaType.APPLICATION_XHTML_XML);
+        mediaTypes.add(MediaType.MULTIPART_FORM_DATA);
+        mediaTypes.add(MediaType.TEXT_HTML);
+        mediaTypes.add(MediaType.TEXT_PLAIN);
+        mediaTypes.add(MediaType.TEXT_XML);
+        mediaTypes.add(MediaType.TEXT_MARKDOWN);
+        for(MediaType mediaType:mediaTypes){
+            if(contentType.isCompatibleWith(mediaType)){
+                return true;
+            }
         }
 
         return false;

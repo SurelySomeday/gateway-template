@@ -1,9 +1,13 @@
 package yxlgx.top.gateway.filter;
 
-import yxlgx.top.gateway.base.constants.Constants;
+import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR;
+
+import java.net.URI;
+
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.event.EnableBodyCachingEvent;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -11,10 +15,7 @@ import org.springframework.cloud.gateway.route.Route;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.annotation.Resource;
-import java.net.URI;
-
-import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR;
+import yxlgx.top.gateway.base.constants.Constants;
 
 /**
  * 动态路由Filter,在这里处理请求

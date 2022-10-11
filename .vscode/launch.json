@@ -1,0 +1,15 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-GatewayApplication<gateway-template>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "yxlgx.top.gateway.GatewayApplication",
+      "projectName": "gateway-template",
+      "args": "",
+      "vmArgs": "-Dspring.profiles.active=dev",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}

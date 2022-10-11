@@ -1,0 +1,18 @@
+{
+  "groups": [
+    {
+      "name": "project.gateway",
+      "type": "yxlgx.top.gateway.base.properties.ProjectGatewayProperties",
+      "sourceType": "yxlgx.top.gateway.base.properties.ProjectGatewayProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "project.gateway.log-response",
+      "type": "java.lang.Boolean",
+      "description": "是否记录响应体",
+      "sourceType": "yxlgx.top.gateway.base.properties.ProjectGatewayProperties"
+    }
+  ],
+  "hints": []
+}

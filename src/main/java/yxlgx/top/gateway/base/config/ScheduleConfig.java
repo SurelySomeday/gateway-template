@@ -1,16 +1,17 @@
 package yxlgx.top.gateway.base.config;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import lombok.extern.slf4j.Slf4j;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author yx
@@ -21,16 +22,15 @@ import java.util.concurrent.ThreadFactory;
 @Configuration
 public class ScheduleConfig implements SchedulingConfigurer {
 
-    public int SCHEDULE_CORE_SIZE=10;
+    public static final int SCHEDULE_CORE_SIZE=10;
 
     //自定义线程池名称
     public static final String THREAD_NAME_WITH_SCHEDULE = "schedule-thread-%d";
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
-//        scheduledTaskRegistrar.setScheduler(Executors.newScheduledThreadPool(SCHEDULE_CORE_SIZE));
         scheduledTaskRegistrar.setScheduler(this.buildSchedulerThreadPool());
-        System.out.println("Scheduler threadpool core_size: " + SCHEDULE_CORE_SIZE);
+        log.info("Scheduler threadpool core_size: " + SCHEDULE_CORE_SIZE);
     }
 
     /**
@@ -49,10 +49,9 @@ public class ScheduleConfig implements SchedulingConfigurer {
          4. DiscardOldestPolicy ： 对拒绝任务不抛弃，而是抛弃队列里面等待最久的一个线程，然后把拒绝任务加到队列。
          不写则为默认的AbortPolicy策略。
          */
-        ScheduledExecutorService threadPool = new ScheduledThreadPoolExecutor(
+        return new ScheduledThreadPoolExecutor(
                 SCHEDULE_CORE_SIZE,
                 threadFactory);
-        return threadPool;
     }
 }
 
