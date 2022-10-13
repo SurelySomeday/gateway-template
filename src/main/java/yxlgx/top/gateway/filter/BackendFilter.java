@@ -25,22 +25,21 @@ import yxlgx.top.gateway.base.util.FilterUtil;
 import yxlgx.top.gateway.domain.LogPushInfo;
 
 /**
- * 过滤器执行顺序不对，暂未解决
  *
  * @author yx
  * @date 2022/01/26
- * @description
+ * @description 后置过滤器，请求结束后处理相关。
  **/
 @Slf4j
 @Component
-public class LogFilter implements GlobalFilter, Ordered {
+public class BackendFilter implements GlobalFilter, Ordered {
 
 
     private final MeterRegistry meterRegistry;
 
     private final GatewayTagsProvider compositeTagsProvider;
 
-    public LogFilter(MeterRegistry meterRegistry, List<GatewayTagsProvider> tagsProviders) {
+    public BackendFilter(MeterRegistry meterRegistry, List<GatewayTagsProvider> tagsProviders) {
         this.meterRegistry = meterRegistry;
         this.compositeTagsProvider = tagsProviders.stream().reduce(exchange -> Tags.empty(), GatewayTagsProvider::and);
     }
@@ -71,11 +70,8 @@ public class LogFilter implements GlobalFilter, Ordered {
 
     }
 
-
-
     private void sendLog(ServerWebExchange exchange,Timer.Sample sample) {
         Tags tags = compositeTagsProvider.apply(exchange);
-
 
         long nanoSeconds = sample.stop(meterRegistry.timer( "requests", tags));
         Duration duration = Duration.ofNanos(nanoSeconds);
@@ -85,7 +81,7 @@ public class LogFilter implements GlobalFilter, Ordered {
             logPushInfo.setCallDuration(BigDecimal.valueOf(duration.toMillis()));
             //根据contentType判断需要拦截处理的数据,一般可以拦截json和text/plain等类型,若是字节数据可能会有异常
             //下面代码也可以修改响应头或者body
-            if (FilterUtil.isTargetLogMediaType(exchange.getResponse())) {
+            if (FilterUtil.isTargetMediaType(exchange.getResponse())) {
                 Object body = exchange.getAttributes().getOrDefault(Constants.CACHED_RESPONSE_BODY, "");
                 Object length = exchange.getAttributes().getOrDefault(Constants.CACHED_RESPONSE_BODY_LENGTH, 0);
                 exchange.getAttributes().remove(Constants.CACHED_RESPONSE_BODY);
