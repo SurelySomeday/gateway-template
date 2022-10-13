@@ -38,7 +38,7 @@ public class LogFilter implements GlobalFilter, Ordered {
 
     private final MeterRegistry meterRegistry;
 
-    private GatewayTagsProvider compositeTagsProvider;
+    private final GatewayTagsProvider compositeTagsProvider;
 
     public LogFilter(MeterRegistry meterRegistry, List<GatewayTagsProvider> tagsProviders) {
         this.meterRegistry = meterRegistry;
@@ -49,12 +49,8 @@ public class LogFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         Timer.Sample sample = Timer.start(meterRegistry);
-        return chain.filter(exchange).doOnSuccess(aVoid -> {
-            endTimerRespectingCommit(exchange,sample);
-                })
-                .doOnError(throwable -> {
-                    endTimerRespectingCommit(exchange,sample);
-                });
+        return chain.filter(exchange).doOnSuccess(aVoid -> endTimerRespectingCommit(exchange,sample))
+                .doOnError(throwable -> endTimerRespectingCommit(exchange,sample));
     }
 
     @Override
