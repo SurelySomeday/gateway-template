@@ -1,4 +1,4 @@
-package yxlgx.top.gateway.base.config.redis;
+package yxlgx.top.gateway.base.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -19,16 +18,6 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.http.MediaType;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author yx
@@ -45,7 +34,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         // 定义 String 序列化器
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         // 定义 Jackson 序列化器
-        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
         ObjectMapper objectMapper = new ObjectMapper();
         //反序列化时智能识别变量名（识别没有按驼峰格式命名的变量名）
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
@@ -86,38 +75,6 @@ public class RedisConfig extends CachingConfigurerSupport {
         RedisSerializationContext<String,Object> build = builder.build();
 
         return new ReactiveRedisTemplate<>(connectionFactory, build);
-    }
-
-    @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        /*return builder.messageConverters(new StringHttpMessageConverter(),new MappingJackson2HttpMessageConverter())
-                .build();*/
-        //先获取到converter列表
-        List<HttpMessageConverter<?>> converters = builder.build().getMessageConverters();
-        builder.setConnectTimeout(Duration.ofMillis(10 * 1000));
-        builder.setReadTimeout(Duration.ofMillis(10 * 1000));
-        for (HttpMessageConverter<?> converter : converters) {
-            //因为我们只想要jsonConverter支持对text/html的解析
-            if (converter instanceof MappingJackson2HttpMessageConverter) {
-                try {
-                    //先将原先支持的MediaType列表拷出
-                    List<MediaType> mediaTypeList = new ArrayList<>(converter.getSupportedMediaTypes());
-                    //加入对text/html的支持
-                    mediaTypeList.add(MediaType.ALL);
-                    //将已经加入了text/html的MediaType支持列表设置为其支持的媒体类型列表
-                    ((MappingJackson2HttpMessageConverter) converter).setSupportedMediaTypes(mediaTypeList);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return builder.build();
-    }
-
-    @Bean
-    public RestTemplateBuilder restTemplateBuilder() {
-        RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
-        return restTemplateBuilder;
     }
 
 }

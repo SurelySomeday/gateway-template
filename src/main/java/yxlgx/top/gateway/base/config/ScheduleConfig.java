@@ -1,17 +1,15 @@
 package yxlgx.top.gateway.base.config;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
-
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
-
-import lombok.extern.slf4j.Slf4j;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * @author yx
@@ -22,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 public class ScheduleConfig implements SchedulingConfigurer {
 
-    public static final int SCHEDULE_CORE_SIZE=10;
+    public static final int SCHEDULE_CORE_SIZE=50;
 
     //自定义线程池名称
     public static final String THREAD_NAME_WITH_SCHEDULE = "schedule-thread-%d";

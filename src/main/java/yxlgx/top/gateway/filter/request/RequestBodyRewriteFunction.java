@@ -10,6 +10,7 @@ import reactor.core.publisher.Mono;
 /**
  * @author yx
  * @date 2021/12/28
+ * @description 可重写请求体
  **/
 public class RequestBodyRewriteFunction implements RewriteFunction<byte[], byte[]> {
 

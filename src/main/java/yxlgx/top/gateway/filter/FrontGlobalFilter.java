@@ -19,7 +19,7 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.G
 /**
  * @author yx
  * @date 2022/01/20
- * @description
+ * @description 前置过滤器，优先级最高，用于处理请求开始前的信息。
  **/
 @Component
 public class FrontGlobalFilter implements GatewayFilter, GlobalFilter, Ordered {
@@ -31,7 +31,10 @@ public class FrontGlobalFilter implements GatewayFilter, GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         exchange.getAttributes().put(Constants.START_TIME, System.currentTimeMillis());
         Route route = exchange.getAttribute(GATEWAY_ROUTE_ATTR); // 获取路由。
-        applicationEventPublisher.publishEvent(new EnableBodyCachingEvent(this, route.getId()));
+        //通知缓存请求body
+        if(route!=null) {
+            applicationEventPublisher.publishEvent(new EnableBodyCachingEvent(this, route.getId()));
+        }
         return chain.filter(exchange);
     }
 

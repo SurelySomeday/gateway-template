@@ -1,15 +1,9 @@
 package yxlgx.top.gateway.base.config.handler;
 
-import yxlgx.top.gateway.base.constants.Constants;
-import yxlgx.top.gateway.base.exception.BaseException;
-import yxlgx.top.gateway.base.util.FilterUtil;
-import yxlgx.top.gateway.base.util.GatewayMsgEnum;
-import yxlgx.top.gateway.domain.LogPushInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBufferFactory;
@@ -17,8 +11,11 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-
-import java.net.URLEncoder;
+import yxlgx.top.gateway.base.constants.Constants;
+import yxlgx.top.gateway.base.exception.BaseException;
+import yxlgx.top.gateway.base.util.FilterUtil;
+import yxlgx.top.gateway.base.util.GatewayMsgEnum;
+import yxlgx.top.gateway.domain.LogPushInfo;
 
 /**
  * @author yx
@@ -59,8 +56,8 @@ public class GlobalExceptionConfiguration implements ErrorWebExceptionHandler {
             BaseException baseException = (BaseException) ex;
             // header set
             GatewayMsgEnum msg = baseException.getMsg();
-            response.getHeaders().set("code", msg.getCode());
-            response.getHeaders().set("message",URLEncoder.encode( msg.getMsg(),"UTF-8"));
+            response.getHeaders().set(Constants.RESPONSE_HEADER_CODE_NAME, msg.getCode());
+            response.getHeaders().set(Constants.RESPONSE_HEADER_MESSAGE_NAME,msg.getEncodeMsg());
             return response
                     .writeWith(Mono.fromSupplier(() -> {
                         DataBufferFactory bufferFactory = response.bufferFactory();
@@ -74,8 +71,8 @@ public class GlobalExceptionConfiguration implements ErrorWebExceptionHandler {
             //未知异常
         } else {
             // header set
-            response.getHeaders().set("code", GatewayMsgEnum.E_90001.getCode());
-            response.getHeaders().set("message",URLEncoder.encode( ex.getMessage(),"UTF-8"));
+            response.getHeaders().set(Constants.RESPONSE_HEADER_CODE_NAME, GatewayMsgEnum.SYSTEM_ERROR.getCode());
+            response.getHeaders().set(Constants.RESPONSE_HEADER_MESSAGE_NAME,GatewayMsgEnum.SYSTEM_ERROR.getEncodeMsg());
             ex.printStackTrace();
             return response
                     .writeWith(Mono.fromSupplier(() -> {

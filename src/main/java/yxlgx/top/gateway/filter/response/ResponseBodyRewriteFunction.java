@@ -26,6 +26,7 @@ import java.util.Map;
 /**
  * @author yx
  * @date 2021/12/28
+ * @description 可重写响应体
  **/
 @Component
 @Slf4j
@@ -54,7 +55,7 @@ public class ResponseBodyRewriteFunction implements RewriteFunction<byte[], byte
             if (ServerWebExchangeUtils.isAlreadyRouted(exchange)) {
                 //根据contentType判断需要拦截处理的数据,一般可以拦截json和text/plain等类型,若是字节数据可能会有异常
                 //下面代码也可以修改响应头或者body
-                if (FilterUtil.isTargetLogMediaType(exchange.getResponse())&& projectGatewayProperties.isLogResponse()) {
+                if (FilterUtil.isTargetMediaType(exchange.getResponse())&& projectGatewayProperties.isLogResponse()) {
                     String extractBody = extractBody(exchange, responseBytes);
                     exchange.getAttributes().put(Constants.CACHED_RESPONSE_BODY, extractBody);
                     if (responseBytes != null) {
@@ -89,7 +90,6 @@ public class ResponseBodyRewriteFunction implements RewriteFunction<byte[], byte
         if(contentType!=null&&contentType.getCharset()!=null){
             return new String(bytes,contentType.getCharset());
         }
-
         return new String(bytes);
     }
 

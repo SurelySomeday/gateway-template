@@ -37,4 +37,12 @@ public class Constants {
      * 全局路由，缓存响应body长度
      */
     public static final String CACHED_RESPONSE_BODY_LENGTH="route_response_body_length";
+    /**
+     * code响应头名称
+     */
+    public static final String RESPONSE_HEADER_CODE_NAME="code";
+    /**
+     * message响应头名称
+     */
+    public static final String RESPONSE_HEADER_MESSAGE_NAME="message";
 }
