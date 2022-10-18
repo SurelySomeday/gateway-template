@@ -1,32 +1,21 @@
 package yxlgx.top.gateway.base.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Date;
-
 import cn.hutool.extra.spring.SpringUtil;
-import org.springframework.beans.BeansException;
-import org.springframework.cloud.endpoint.event.RefreshEvent;
+import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.event.EventListener;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.buffer.NettyDataBuffer;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
-
-import com.alibaba.fastjson.JSONObject;
-
-import cn.hutool.json.JSONUtil;
 import yxlgx.top.gateway.base.constants.Constants;
 import yxlgx.top.gateway.base.properties.ProjectGatewayProperties;
 import yxlgx.top.gateway.domain.LogPushInfo;
 
-import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author yx
@@ -48,13 +37,7 @@ public class FilterUtil {
 
     public static boolean isTargetMediaType(ServerHttpResponse serverHttpResponse) {
         MediaType contentType = serverHttpResponse.getHeaders().getContentType();
-        if(contentType==null) return false;
-        for(MediaType mediaType:getSupportMediaTypeList()){
-            if(contentType.isCompatibleWith(mediaType)){
-                return true;
-            }
-        }
-        return false;
+        return isTargetMediaType(contentType);
     }
 
     public static boolean isTargetMediaType(MediaType contentType) {
@@ -103,16 +86,17 @@ public class FilterUtil {
 
     private static List<MediaType> getSupportMediaTypeList(){
         if(projectGatewayProperties==null){
-            synchronized (FilterUtil.class){
-                if(projectGatewayProperties==null){
-                    projectGatewayProperties=SpringUtil.getBean(ProjectGatewayProperties.class);
-                }
-            }
+            initProjectGatewayProperties();
         }
         List<MediaType> supportMediaList = projectGatewayProperties.getSupportMedia();
         if(supportMediaList!=null&&supportMediaList.isEmpty()){
             return mediaTypesList;
         }
         return supportMediaList;
+    }
+    private static synchronized void initProjectGatewayProperties(){
+        if (projectGatewayProperties == null) {
+            projectGatewayProperties=SpringUtil.getBean(ProjectGatewayProperties.class);
+        }
     }
 }

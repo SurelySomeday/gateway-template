@@ -1,17 +1,15 @@
 package yxlgx.top.gateway;
 
-import com.alibaba.cloud.sentinel.datasource.config.DataSourcePropertiesConfiguration;
-import com.alibaba.cloud.sentinel.datasource.config.NacosDataSourceProperties;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule;
 import com.alibaba.csp.sentinel.datasource.ReadableDataSource;
 import com.alibaba.csp.sentinel.datasource.nacos.NacosDataSource;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.alibaba.nacos.api.PropertyKeyConst;
-import com.alibaba.nacos.api.config.ConfigFactory;
-import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.exception.NacosException;
+import com.alibaba.nacos.api.naming.NamingFactory;
+import com.alibaba.nacos.api.naming.NamingService;
+import com.alibaba.nacos.api.naming.pojo.Instance;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
@@ -98,11 +96,11 @@ class GatewayApplicationTests {
     @Test
     void nacosTest() throws Exception {
         ReadableDataSource<String, List<DegradeRule>> degradeRuleDataSource = new NacosDataSource<>(
-                "yxlgx.top:8847", "DEFAULT_GROUP", "aa",
+                "yxlgx.top:8848", "DEFAULT_GROUP", "aa",
                 source -> JSON.parseObject(source, new TypeReference<Set<GatewayFlowRule>>() {
                 }));
         String s = degradeRuleDataSource.readSource();
-        log.info("sa");
+        log.info(s);
         Thread.sleep(30000);
         degradeRuleDataSource.close();
         ReadableDataSource<String, List<DegradeRule>> degradeRuleDataSource2 = new NacosDataSource<>(
@@ -111,6 +109,31 @@ class GatewayApplicationTests {
                 }));
         Thread.sleep(300000);
         degradeRuleDataSource2.close();
+    }
+
+    @Test
+    void testNaming() throws NacosException {
+        Properties properties = new Properties();
+        properties.put("serverAddr", "yxlgx.top:8848");
+        properties.put("namespace", "dev");
+        NamingService namingService = NamingFactory.createNamingService(properties);
+        namingService.subscribe("gateway", "DEFAULT_GROUP", event -> {
+            List<Instance> allInstances = null;
+            try {
+                //获取所有该服务的列表
+                allInstances = namingService.getAllInstances("gateway");
+                allInstances.stream().forEach(item->{
+                    System.out.println(item.getIp());
+                });
+            }catch (Exception e){
+
+            }
+        });
+        List<Instance> gateway = namingService.getAllInstances("gateway");
+        gateway.stream().forEach(item->{
+            System.out.println(item.toString());
+        });
+
     }
 
 }
