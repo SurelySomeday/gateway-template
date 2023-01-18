@@ -6,8 +6,10 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.integration.config.EnableMessageHistory;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import reactivefeign.spring.config.EnableReactiveFeignClients;
 
 @Import(cn.hutool.extra.spring.SpringUtil.class)
+@EnableReactiveFeignClients
 @EnableScheduling
 @EnableMessageHistory
 @SpringBootApplication(scanBasePackages = {"cn.hutool.extra.spring", "yxlgx.top"},

@@ -19,10 +19,14 @@ import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 @Slf4j
 class GatewayApplicationTests {
@@ -49,6 +53,8 @@ class GatewayApplicationTests {
 
         }
 
+
+
         WebClient webClient= WebClient.builder().exchangeStrategies(ExchangeStrategies.builder()
                 .codecs(configurer -> configurer
                         .defaultCodecs()
@@ -61,34 +67,29 @@ class GatewayApplicationTests {
                 .uri("http://yxlgx.top:8848/nacos/").retrieve()
                 .bodyToMono(String.class);
         Mono<String> mono2 = webClient2.method(HttpMethod.GET)
-                .uri("http://yxlgx.top:8848/nacos/").retrieve()
+                .uri("http://172.19.229.75:8848/nacos/").retrieve()
                 .bodyToMono(String.class);
 
-
-        System.out.println("================================================");
+        System.out.println("===================== blockAll ===========================");
         long start = System.currentTimeMillis();
         System.out.println();
-        Disposable complete = Flux.merge(mono1, mono2)
-                .doOnComplete(() -> System.out.println("complete")).subscribe();
-        while (!complete.isDisposed()){
-
-        }
+        String blockLast = Flux.merge(mono1, mono2)
+                .doOnComplete(() -> System.out.println("complete")).blockLast();
         long end = System.currentTimeMillis();
         System.out.println(end-start+"ms");
-        System.out.println("================================================");
+        System.out.println("====================== blockOne ==========================");
         Mono<String> mono3 = webClient.method(HttpMethod.GET)
                 .uri("http://yxlgx.top:8848/nacos/").retrieve()
                 .bodyToMono(String.class);
         Mono<String> mono4 = webClient2.method(HttpMethod.GET)
                 .uri("http://172.19.229.75:8848/nacos/").retrieve()
-                .bodyToMono(String.class).delayElement(Duration.ofSeconds(10));
+                .bodyToMono(String.class);
         start = System.currentTimeMillis();
         String block3 = mono3.block();
-        System.out.println(System.currentTimeMillis()-start+"ms");
+        long mid = System.currentTimeMillis();
+        System.out.println(mid-start+"ms");
         String block4 = mono4.block();
-        System.out.println(System.currentTimeMillis()-start+"ms");
-        System.out.println(block3.substring(0,10));
-        System.out.println(block4.substring(0,10));
+        System.out.println(System.currentTimeMillis()-mid+"ms");
         end = System.currentTimeMillis();
         System.out.println(end-start+"ms");
     }
@@ -133,6 +134,13 @@ class GatewayApplicationTests {
         gateway.stream().forEach(item->{
             System.out.println(item.toString());
         });
+
+    }
+
+    @Test
+    public void testSimple() throws UnsupportedEncodingException {
+        byte[] bytes=new byte[]{0,0,0,114};
+        System.out.println(new String(bytes, StandardCharsets.US_ASCII));
 
     }
 

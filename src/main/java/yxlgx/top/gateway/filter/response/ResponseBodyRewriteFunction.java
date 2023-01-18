@@ -1,6 +1,11 @@
 package yxlgx.top.gateway.filter.response;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
 import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.factory.rewrite.GzipMessageBodyResolver;
@@ -13,15 +18,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 import yxlgx.top.gateway.base.constants.Constants;
 import yxlgx.top.gateway.base.properties.ProjectGatewayProperties;
 import yxlgx.top.gateway.base.util.FilterUtil;
-
-import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author yx

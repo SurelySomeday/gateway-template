@@ -1,17 +1,16 @@
 package yxlgx.top.gateway.controller;
 
+import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.CIRCUITBREAKER_EXECUTION_EXCEPTION_ATTR;
+
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
+
 import reactor.core.publisher.Mono;
 import yxlgx.top.gateway.base.constants.Constants;
 import yxlgx.top.gateway.base.exception.BaseException;
 import yxlgx.top.gateway.base.util.GatewayMsgEnum;
-
-import java.net.URLEncoder;
-
-import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.CIRCUITBREAKER_EXECUTION_EXCEPTION_ATTR;
 
 /**
  * @author yx

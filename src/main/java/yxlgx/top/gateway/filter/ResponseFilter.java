@@ -2,12 +2,12 @@ package yxlgx.top.gateway.filter;
 
 import java.util.Objects;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import javax.annotation.Resource;
+
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.filter.NettyWriteResponseFilter;
-import org.springframework.cloud.gateway.filter.factory.rewrite.ModifyResponseBodyGatewayFilterFactory;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -20,8 +20,6 @@ import yxlgx.top.gateway.base.properties.ProjectGatewayProperties;
 import yxlgx.top.gateway.base.util.GatewayMsgEnum;
 import yxlgx.top.gateway.filter.custom.CustomModifyResponseBodyGatewayFilterFactory;
 import yxlgx.top.gateway.filter.response.ResponseBodyRewriteFunction;
-
-import javax.annotation.Resource;
 
 /**
  * 响应处理
